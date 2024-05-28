@@ -1,9 +1,14 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from blog.constants import MAX_LENGTH
 
 User = get_user_model()
+
+
+class MyUser(AbstractUser):
+    pass
 
 
 class PublishedModel(models.Model):
