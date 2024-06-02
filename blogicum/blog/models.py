@@ -10,7 +10,7 @@ class PublishedModel(models.Model):
     is_published = models.BooleanField(
         default=True,
         verbose_name="Опубликовано",
-        help_text="Снимите галочку, чтобы скрыть публикацию."
+        help_text="Снимите галочку, чтобы скрыть публикацию.",
     )
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Добавлено"
@@ -22,8 +22,7 @@ class PublishedModel(models.Model):
 
 class Location(PublishedModel):
     name = models.CharField(
-        max_length=MAX_LENGTH,
-        verbose_name="Название места"
+        max_length=MAX_LENGTH, verbose_name="Название места"
     )
 
     class Meta:
@@ -55,7 +54,7 @@ class Category(PublishedModel):
 class Post(PublishedModel):
     title = models.CharField(max_length=MAX_LENGTH, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст")
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
+    image = models.ImageField(upload_to="post_images/", blank=True, null=True)
     pub_date = models.DateTimeField(
         verbose_name="Дата и время публикации",
         help_text="Если установить дату и время в будущем — "
@@ -65,12 +64,17 @@ class Post(PublishedModel):
         User, on_delete=models.CASCADE, verbose_name="Автор публикации"
     )
     location = models.ForeignKey(
-        Location, on_delete=models.SET_NULL, null=True,
-        blank=True, verbose_name="Местоположение"
+        Location,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Местоположение",
     )
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True,
-        verbose_name="Категория"
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Категория",
     )
 
     class Meta:
@@ -91,5 +95,5 @@ class Comment(models.Model):
         User, on_delete=models.CASCADE, verbose_name="Автор коментария"
     )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, null=True, related_name='comments'
+        Post, on_delete=models.CASCADE, null=True, related_name="comments"
     )
