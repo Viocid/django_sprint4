@@ -52,19 +52,10 @@ class Category(PublishedModel):
         return self.title
 
 
-class Comment(models.Model):
-    text = models.TextField(verbose_name="Текст")
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Добавлено"
-    )
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор коментария"
-    )
-
-
 class Post(PublishedModel):
     title = models.CharField(max_length=MAX_LENGTH, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст")
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     pub_date = models.DateTimeField(
         verbose_name="Дата и время публикации",
         help_text="Если установить дату и время в будущем — "
@@ -81,10 +72,6 @@ class Post(PublishedModel):
         Category, on_delete=models.SET_NULL, null=True,
         verbose_name="Категория"
     )
-    comments = models.ForeignKey(
-        Comment, on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name="Коментарии"
-    )
 
     class Meta:
         verbose_name = "публикация"
@@ -93,3 +80,16 @@ class Post(PublishedModel):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    text = models.TextField(verbose_name="Текст")
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="Добавлено"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Автор коментария"
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, related_name='comments'
+    )
