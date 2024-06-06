@@ -97,3 +97,6 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, related_name="comments"
     )
+
+    class Meta:
+        ordering = ["created_at"]

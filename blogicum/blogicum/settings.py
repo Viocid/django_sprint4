@@ -47,12 +47,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "blogicum.urls"
 
-TEMPLATES_DIRS = BASE_DIR / "templates"
+TEMPLATES_DIR = BASE_DIR / "templates"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [TEMPLATES_DIRS],
+        "DIRS": [TEMPLATES_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -120,3 +120,7 @@ MEDIA_URL = "/media/"
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+
+LOGIN_URL = "login"
+
+MEDIA_ROOT = BASE_DIR / "media"
