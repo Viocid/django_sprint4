@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from blog.constants import NUM_PUB_PAGE
+from blog.models import Category, Comment, Post
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import Http404
@@ -13,8 +15,6 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-
-from blog.models import Category, Comment, Post
 
 from .forms import CommentForm, PostForm
 from .models import User
@@ -35,7 +35,7 @@ def querying_posts(**args):
 class BlogListView(ListView):
     model = Post
     template_name = "blog/index.html"
-    paginate_by = 10
+    paginate_by = NUM_PUB_PAGE
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,7 +85,7 @@ class PostDetailView(DetailView):
 class CategoryListView(ListView):
     model = Category
     template_name = "blog/category.html"
-    paginate_by = 10
+    paginate_by = NUM_PUB_PAGE
 
     def get_queryset(self):
         category_slug = self.kwargs.get("category_slug")
@@ -105,7 +105,7 @@ class UserProfileView(DetailView):
     model = User
     template_name = "blog/profile.html"
     context_object_name = "profile"
-    paginate_by = 10
+    paginate_by = NUM_PUB_PAGE
     slug_field = "username"
     slug_url_kwarg = "username"
 
@@ -245,7 +245,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         if obj.author != self.request.user:
-            return redirect('blog:post_detail', post_id=obj.id)
+            return redirect("blog:post_detail", post_id=obj.id)
         return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, **kwargs):
@@ -253,16 +253,16 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404
         return get_object_or_404(
             Comment,
-            pk=self.kwargs.get('comment_id'),
-            post=Post.objects.get(pk=self.kwargs.get('post_id')),
-            author=self.request.user
+            pk=self.kwargs.get("comment_id"),
+            post=Post.objects.get(pk=self.kwargs.get("post_id")),
+            author=self.request.user,
         )
-    
+
     def get_success_url(self):
         return reverse(
-            'blog:post_detail',
-            kwargs={'post_id': self.kwargs.get('post_id')}
+            "blog:post_detail", kwargs={"post_id": self.kwargs.get("post_id")}
         )
+
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
@@ -278,4 +278,6 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("blog:post_detail", kwargs={"post_id": self.kwargs["post_id"]})
+        return reverse(
+            "blog:post_detail", kwargs={"post_id": self.kwargs["post_id"]}
+        )
