@@ -1,6 +1,7 @@
-from blog.constants import MAX_LENGTH
 from django.contrib.auth import get_user_model
 from django.db import models
+
+from blog.constants import MAX_LENGTH_STR
 
 User = get_user_model()
 
@@ -21,7 +22,7 @@ class PublishedModel(models.Model):
 
 class Location(PublishedModel):
     name = models.CharField(
-        max_length=MAX_LENGTH, verbose_name="Название места"
+        max_length=MAX_LENGTH_STR, verbose_name="Название места"
     )
 
     class Meta:
@@ -33,13 +34,15 @@ class Location(PublishedModel):
 
 
 class Category(PublishedModel):
-    title = models.CharField(max_length=MAX_LENGTH, verbose_name="Заголовок")
+    title = models.CharField(max_length=MAX_LENGTH_STR, verbose_name="Заголовок")
     description = models.TextField(verbose_name="Описание")
     slug = models.SlugField(
         unique=True,
         verbose_name="Идентификатор",
-        help_text="Идентификатор страницы для URL; "
-        "разрешены символы латиницы, цифры, дефис и подчёркивание.",
+        help_text=(
+            "Идентификатор страницы для URL; "
+            "разрешены символы латиницы, цифры, дефис и подчёркивание.",
+        )
     )
 
     class Meta:
@@ -51,16 +54,19 @@ class Category(PublishedModel):
 
 
 class Post(PublishedModel):
-    title = models.CharField(max_length=MAX_LENGTH, verbose_name="Заголовок")
+    title = models.CharField(max_length=MAX_LENGTH_STR, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст")
     image = models.ImageField(upload_to="post_images/", blank=True, null=True)
     pub_date = models.DateTimeField(
         verbose_name="Дата и время публикации",
-        help_text="Если установить дату и время в будущем — "
-        "можно делать отложенные публикации.",
+        help_text=(
+            "Если установить дату и время в будущем — "
+            "можно делать отложенные публикации.",
+        )
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор публикации"
+        User, on_delete=models.CASCADE,
+        verbose_name="Автор публикации",
     )
     location = models.ForeignKey(
         Location,
@@ -80,6 +86,7 @@ class Post(PublishedModel):
         verbose_name = "публикация"
         verbose_name_plural = "Публикации"
         ordering = ["-pub_date"]
+        default_related_name = 'Posts'
 
     def __str__(self):
         return self.title
@@ -91,11 +98,18 @@ class Comment(models.Model):
         auto_now_add=True, verbose_name="Добавлено"
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор коментария"
+        User, on_delete=models.CASCADE,
+        verbose_name="Автор коментария"
     )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, null=True, related_name="comments"
+        Post, on_delete=models.CASCADE, null=True
     )
 
     class Meta:
         ordering = ["created_at"]
+        verbose_name = "Коментарий"
+        verbose_name_plural = "Коментарии"
+        default_related_name = "comments"
+
+    def __str__(self):
+        return self.text

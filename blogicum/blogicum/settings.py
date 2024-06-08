@@ -22,8 +22,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "blog.apps.BlogConfig",
-    "pages.apps.PagesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -32,6 +30,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_bootstrap5",
     "debug_toolbar",
+    "blog.apps.BlogConfig",
+    "pages.apps.PagesConfig",
 ]
 
 MIDDLEWARE = [
