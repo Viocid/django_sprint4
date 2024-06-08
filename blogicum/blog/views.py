@@ -1,11 +1,8 @@
-from datetime import datetime
-
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
@@ -62,7 +59,7 @@ class PostDetailView(DetailView):
 
 
 class CategoryListView(ListView):
-    model = Category
+    #model = Category
     template_name = "blog/category.html"
     paginate_by = NUM_PUB_PAGE
 
@@ -142,7 +139,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = "blog/create.html"
     pk_url_kwarg = "post_id"
-    login_url = "/login/"
 
     def dispatch(self, request, *args, **kwargs):
         post = self.get_object()
