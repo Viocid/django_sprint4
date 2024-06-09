@@ -31,11 +31,13 @@ class Location(PublishedModel):
         verbose_name_plural = "Местоположения"
 
     def __str__(self):
-        return self.name
+        return self.name[:30]
 
 
 class Category(PublishedModel):
-    title = models.CharField(max_length=MAX_LENGTH_STR, verbose_name="Заголовок")
+    title = models.CharField(
+        max_length=MAX_LENGTH_STR, verbose_name="Заголовок"
+    )
     description = models.TextField(verbose_name="Описание")
     slug = models.SlugField(
         unique=True,
@@ -43,7 +45,7 @@ class Category(PublishedModel):
         help_text=(
             "Идентификатор страницы для URL; "
             "разрешены символы латиницы, цифры, дефис и подчёркивание.",
-        )
+        ),
     )
 
     class Meta:
@@ -51,11 +53,13 @@ class Category(PublishedModel):
         verbose_name_plural = "Категории"
 
     def __str__(self):
-        return self.title
+        return self.title[:30]
 
 
 class Post(PublishedModel):
-    title = models.CharField(max_length=MAX_LENGTH_STR, verbose_name="Заголовок")
+    title = models.CharField(
+        max_length=MAX_LENGTH_STR, verbose_name="Заголовок"
+    )
     text = models.TextField(verbose_name="Текст")
     image = models.ImageField(upload_to="post_images/", blank=True, null=True)
     pub_date = models.DateTimeField(
@@ -63,10 +67,11 @@ class Post(PublishedModel):
         help_text=(
             "Если установить дату и время в будущем — "
             "можно делать отложенные публикации.",
-        )
+        ),
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User,
+        on_delete=models.CASCADE,
         verbose_name="Автор публикации",
     )
     location = models.ForeignKey(
@@ -87,13 +92,13 @@ class Post(PublishedModel):
         verbose_name = "публикация"
         verbose_name_plural = "Публикации"
         ordering = ["-pub_date"]
-        default_related_name = 'Posts'
+        default_related_name = "Posts"
 
     def __str__(self):
-        return self.title
+        return self.title[:30]
 
     def get_absolute_url(self):
-        return reverse('blog:post_detail', kwargs={'post_id': self.pk})
+        return reverse("blog:post_detail", kwargs={"post_id": self.pk})
 
 
 class Comment(models.Model):
@@ -102,12 +107,9 @@ class Comment(models.Model):
         auto_now_add=True, verbose_name="Добавлено"
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        verbose_name="Автор коментария"
+        User, on_delete=models.CASCADE, verbose_name="Автор коментария"
     )
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, null=True
-    )
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
     class Meta:
         ordering = ["created_at"]
@@ -116,4 +118,4 @@ class Comment(models.Model):
         default_related_name = "comments"
 
     def __str__(self):
-        return self.text
+        return self.text[:30]

@@ -23,6 +23,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("title", "description", "is_published")
     list_editable = ("is_published",)
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("text", "created_at", "author", "post")
