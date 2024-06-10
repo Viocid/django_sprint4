@@ -118,4 +118,6 @@ class Comment(models.Model):
         default_related_name = "comments"
 
     def __str__(self):
-        return f'Комментарий автора {self.author.username} к посту "{self.post.title}", текст: {self.text[:TEXT_CHAR_LIMIT]}'
+        return (f'Комментарий автора {self.author.username}'
+                f'к посту "{self.post.title}", '
+                f'текст: {self.text[:TEXT_CHAR_LIMIT]}')
