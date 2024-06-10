@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 
-from blog.constants import MAX_LENGTH_STR
+from blog.constants import MAX_LENGTH_STR, TEXT_CHAR_LIMIT
 
 User = get_user_model()
 
@@ -31,7 +31,7 @@ class Location(PublishedModel):
         verbose_name_plural = "Местоположения"
 
     def __str__(self):
-        return self.name[:30]
+        return self.name[:TEXT_CHAR_LIMIT]
 
 
 class Category(PublishedModel):
@@ -53,7 +53,7 @@ class Category(PublishedModel):
         verbose_name_plural = "Категории"
 
     def __str__(self):
-        return self.title[:30]
+        return self.title[:TEXT_CHAR_LIMIT]
 
 
 class Post(PublishedModel):
@@ -92,13 +92,13 @@ class Post(PublishedModel):
         verbose_name = "публикация"
         verbose_name_plural = "Публикации"
         ordering = ["-pub_date"]
-        default_related_name = "Posts"
+        default_related_name = "posts"
 
     def __str__(self):
-        return self.title[:30]
+        return self.title[:TEXT_CHAR_LIMIT]
 
     def get_absolute_url(self):
-        return reverse("blog:post_detail", kwargs={"post_id": self.pk})
+        return reverse("blog:post_detail", args=[self.pk])
 
 
 class Comment(models.Model):
@@ -118,4 +118,4 @@ class Comment(models.Model):
         default_related_name = "comments"
 
     def __str__(self):
-        return self.text[:30]
+        return f'Комментарий автора {self.author.username} к посту "{self.post.title}", текст: {self.text[:TEXT_CHAR_LIMIT]}'
