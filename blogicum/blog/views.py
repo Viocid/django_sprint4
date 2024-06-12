@@ -25,17 +25,7 @@ class BlogListView(ListView):
     paginate_by = NUM_PUB_PAGE
 
     def get_queryset(self):
-        return (
-            Post.objects.filter(
-                is_published=True,
-                pub_date__lt=timezone.now(),
-                category__is_published=True,
-            )
-            .select_related("author", "category", "location")
-            .prefetch_related("comments")
-            .annotate(comments_count=Count("comments"))
-            .order_by("-pub_date")
-        )
+        return querying_posts()
 
 
 class PostDetailView(DetailView):
@@ -70,12 +60,7 @@ class CategoryListView(ListView):
             Category.objects, slug=category_slug, is_published=True
         )
         self.category = category
-        return (
-            querying_posts(category=self.category)
-            .select_related("author")
-            .annotate(comments_count=Count("comments"))
-            .order_by("-pub_date")
-        )
+        return querying_posts(category=self.category)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,15 +83,12 @@ class UserProfileView(ListView):
         if self.request.user == user:
             return (
                 Post.objects.filter(author=user)
+                .select_related("author", "category", "location")
                 .annotate(comments_count=Count("comments"))
                 .order_by("-pub_date")
             )
 
-        return (
-            querying_posts()
-            .annotate(comments_count=Count("comments"))
-            .order_by("-pub_date")
-        )
+        return querying_posts()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
