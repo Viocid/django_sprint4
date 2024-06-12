@@ -3,7 +3,6 @@ from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.views.generic import (
     CreateView,
     DeleteView,
